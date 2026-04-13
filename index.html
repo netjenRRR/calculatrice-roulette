@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculatrice Roulette</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #1a4a2e;
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .carte {
+      background-color: #ffffff;
+      border-radius: 16px;
+      padding: 20px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    /* ── Sélecteurs du haut ── */
+    .selecteur-bloc {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #f0f7f3;
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-bottom: 10px;
+      gap: 10px;
+    }
+
+    .selecteur-label {
+      font-size: 0.88rem;
+      color: #555;
+      flex: 1;
+    }
+
+    .selecteur-label strong {
+      display: block;
+      font-size: 1rem;
+      color: #1a4a2e;
+    }
+
+    .selecteur-controles {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-sel {
+      width: 34px;
+      height: 34px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border: 2px solid #c5dece;
+      border-radius: 8px;
+      background-color: #fff;
+      color: #1a4a2e;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background-color 0.15s;
+    }
+
+    .btn-sel:active {
+      background-color: #e8f5ee;
+    }
+
+    .btn-stack {
+      width: auto;
+      padding: 0 8px;
+      font-size: 0.78rem;
+    }
+
+    .valeur-affichee {
+      min-width: 56px;
+      text-align: center;
+      font-size: 1rem;
+      font-weight: bold;
+      color: #1a4a2e;
+    }
+
+    .selecteur-controles input[type="number"] {
+      width: 72px;
+      padding: 7px 4px;
+      font-size: 0.95rem;
+      text-align: center;
+      border: 2px solid #c5dece;
+      border-radius: 8px;
+      outline: none;
+    }
+
+    .selecteur-controles input[type="number"]:focus {
+      border-color: #1a4a2e;
+    }
+
+    .total-euro {
+      text-align: center;
+      font-size: 0.95rem;
+      font-weight: bold;
+      color: #1a4a2e;
+      padding: 6px 0 2px;
+    }
+
+    .separateur {
+      height: 1px;
+      background-color: #e0e0e0;
+      margin: 8px 0;
+    }
+
+    /* ── Lignes de mises ── */
+    .ligne {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #f7f7f7;
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-bottom: 8px;
+      gap: 12px;
+    }
+
+    .infos-mise {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .nom-mise {
+      font-weight: bold;
+      color: #222;
+      font-size: 0.95rem;
+    }
+
+    .ratio-mise {
+      color: #c0392b;
+      font-size: 0.78rem;
+      margin-top: 2px;
+    }
+
+    .controles {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-inc {
+      width: 34px;
+      height: 34px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      background-color: #fff;
+      color: #1a4a2e;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background-color 0.15s;
+    }
+
+    .btn-inc:active {
+      background-color: #e8f5ee;
+    }
+
+    input[type="number"] {
+      width: 56px;
+      padding: 7px 4px;
+      font-size: 1rem;
+      text-align: center;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input[type="number"]:focus {
+      border-color: #1a4a2e;
+    }
+
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+    }
+    input[type="number"] { -moz-appearance: textfield; }
+
+    /* ── Bouton reset ── */
+    .bouton-reset {
+      width: 100%;
+      padding: 10px;
+      background-color: transparent;
+      color: #aaa;
+      font-size: 0.88rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: all 0.2s;
+    }
+
+    .bouton-reset:active {
+      background-color: #f0f0f0;
+    }
+
+    /* ── Résultat ── */
+    .resultat {
+      display: flex;
+      margin-top: 10px;
+      margin-bottom: 2px;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .resultat-principal {
+      background-color: #1a4a2e;
+      padding: 10px 12px;
+      text-align: center;
+      flex: 1;
+    }
+
+    .resultat-label {
+      color: #a8d5b5;
+      font-size: 0.78rem;
+      margin-bottom: 2px;
+    }
+
+    .resultat-total {
+      color: #ffffff;
+      font-size: 2.2rem;
+      font-weight: bold;
+      line-height: 1;
+    }
+
+    .resultat-reste {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background-color: #0f2e1a;
+      padding: 10px 12px;
+      text-align: center;
+      flex: 1;
+    }
+
+    .reste-label {
+      color: #7fbf99;
+      font-size: 0.78rem;
+      margin-bottom: 2px;
+    }
+
+    .reste-valeur {
+      color: #f0c040;
+      font-size: 2.2rem;
+      font-weight: bold;
+      line-height: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="carte">
+
+    <!-- Valeur d'un jeton -->
+    <div class="selecteur-bloc">
+      <div class="selecteur-label">
+        Valeur d'un jeton
+        <strong id="label-jeton">5 €</strong>
+      </div>
+      <div class="selecteur-controles">
+        <button class="btn-sel" onclick="changerJeton(-1)">◀</button>
+        <button class="btn-sel" onclick="changerJeton(1)">▶</button>
+      </div>
+    </div>
+
+    <!-- Paiement croupier -->
+    <div class="selecteur-bloc">
+      <div class="selecteur-label">
+        Paiement euros
+      </div>
+      <div class="selecteur-controles">
+        <button class="btn-sel" onclick="changerCroupier(-1)">−</button>
+        <button class="btn-sel btn-stack" onclick="changerCroupier(-20)">−Stack</button>
+        <input type="number" id="input-croupier" min="0" value="" placeholder="0" />
+        <button class="btn-sel btn-stack" onclick="changerCroupier(20)">+Stack</button>
+        <button class="btn-sel" onclick="changerCroupier(1)">+</button>
+      </div>
+
+    </div>
+
+    <!-- Résultat -->
+    <div class="resultat" id="resultat">
+      <div class="resultat-principal">
+        <div class="resultat-label">Total à payer</div>
+        <div class="resultat-total" id="total">0</div>
+      </div>
+      <div class="resultat-reste" id="bloc-reste">
+        <div class="reste-label">Reste à payer</div>
+        <div class="reste-valeur" id="reste">—</div>
+      </div>
+    </div>
+
+    <div class="total-euro" id="total-euro">0 €</div>
+
+    <div class="separateur"></div>
+
+    <!-- Mises -->
+    <div class="ligne">
+      <div class="infos-mise">
+        <span class="nom-mise">Plein</span>
+        <span class="ratio-mise">× 35</span>
+      </div>
+      <div class="controles">
+        <button class="btn-inc" onclick="decrementer('plein')">−</button>
+        <input type="number" id="plein" min="0" value="0" />
+        <button class="btn-inc" onclick="incrementer('plein')">+</button>
+      </div>
+    </div>
+
+    <div class="ligne">
+      <div class="infos-mise">
+        <span class="nom-mise">Cheval</span>
+        <span class="ratio-mise">× 17</span>
+      </div>
+      <div class="controles">
+        <button class="btn-inc" onclick="decrementer('cheval')">−</button>
+        <input type="number" id="cheval" min="0" value="0" />
+        <button class="btn-inc" onclick="incrementer('cheval')">+</button>
+      </div>
+    </div>
+
+    <div class="ligne">
+      <div class="infos-mise">
+        <span class="nom-mise">Transversale</span>
+        <span class="ratio-mise">× 11</span>
+      </div>
+      <div class="controles">
+        <button class="btn-inc" onclick="decrementer('transversale')">−</button>
+        <input type="number" id="transversale" min="0" value="0" />
+        <button class="btn-inc" onclick="incrementer('transversale')">+</button>
+      </div>
+    </div>
+
+    <div class="ligne">
+      <div class="infos-mise">
+        <span class="nom-mise">Carré</span>
+        <span class="ratio-mise">× 8</span>
+      </div>
+      <div class="controles">
+        <button class="btn-inc" onclick="decrementer('carre')">−</button>
+        <input type="number" id="carre" min="0" value="0" />
+        <button class="btn-inc" onclick="incrementer('carre')">+</button>
+      </div>
+    </div>
+
+    <div class="ligne">
+      <div class="infos-mise">
+        <span class="nom-mise">Sixain</span>
+        <span class="ratio-mise">× 5</span>
+      </div>
+      <div class="controles">
+        <button class="btn-inc" onclick="decrementer('sixain')">−</button>
+        <input type="number" id="sixain" min="0" value="0" />
+        <button class="btn-inc" onclick="incrementer('sixain')">+</button>
+      </div>
+    </div>
+
+    <button class="bouton-reset" onclick="reset()">Remettre à zéro</button>
+
+  </div>
+
+  <script>
+    const valeursJeton = [5, 10, 20, 25, 50, 100];
+    let indexJeton = 0;
+    let paiementCroupier = 0;
+
+    const mises = [
+      { id: "plein",        ratio: 35, max: 20  },
+      { id: "cheval",       ratio: 17, max: 40  },
+      { id: "transversale", ratio: 11, max: 60  },
+      { id: "carre",        ratio: 8,  max: 80  },
+      { id: "sixain",       ratio: 5,  max: 120 },
+    ];
+
+    function changerJeton(direction) {
+      indexJeton = Math.max(0, Math.min(valeursJeton.length - 1, indexJeton + direction));
+      document.getElementById("label-jeton").textContent = valeursJeton[indexJeton] + " €";
+      calculer();
+    }
+
+    function changerCroupier(multiplicateur) {
+      const valeurJeton = valeursJeton[indexJeton];
+      const delta = multiplicateur * valeurJeton;
+      const input = document.getElementById("input-croupier");
+      paiementCroupier = Math.min(328000, Math.max(0, paiementCroupier + delta));
+      input.value = paiementCroupier > 0 ? paiementCroupier : "";
+      calculer();
+    }
+
+    function incrementer(id) {
+      const mise = mises.find(function(m) { return m.id === id; });
+      const input = document.getElementById(id);
+      const val = (parseInt(input.value) || 0) + 1;
+      input.value = Math.min(val, mise.max);
+      calculer();
+    }
+
+    function decrementer(id) {
+      const input = document.getElementById(id);
+      const val = parseInt(input.value) || 0;
+      if (val > 0) input.value = val - 1;
+      calculer();
+    }
+
+    function calculer() {
+      let totalJetons = 0;
+
+      mises.forEach(function(mise) {
+        const valeur = parseInt(document.getElementById(mise.id).value) || 0;
+        totalJetons += valeur * mise.ratio;
+      });
+
+      document.getElementById("total").textContent = totalJetons;
+      const euroTotal = totalJetons * valeursJeton[indexJeton];
+      document.getElementById("total-euro").textContent = euroTotal + " €";
+
+      paiementCroupier = parseInt(document.getElementById("input-croupier").value) || 0;
+
+      if (paiementCroupier > 0) {
+        const valeurJeton = valeursJeton[indexJeton];
+        const jetonsPaies = Math.floor(paiementCroupier / valeurJeton);
+        const resteJetons = totalJetons - jetonsPaies;
+        document.getElementById("reste").textContent = resteJetons;
+      } else {
+        document.getElementById("reste").textContent = "—";
+      }
+    }
+
+    function reset() {
+      mises.forEach(function(mise) {
+        document.getElementById(mise.id).value = 0;
+      });
+      paiementCroupier = 0;
+      document.getElementById("input-croupier").value = "";
+      calculer();
+      document.getElementById("reste").textContent = "—";
+    }
+
+    mises.forEach(function(mise) {
+      const input = document.getElementById(mise.id);
+      input.setAttribute("max", mise.max);
+      input.addEventListener("input", function() {
+        const val = parseInt(input.value) || 0;
+        if (val > mise.max) input.value = mise.max;
+        calculer();
+      });
+    });
+
+    document.getElementById("input-croupier").addEventListener("input", function() {
+      const val = parseInt(this.value) || 0;
+      if (val > 328000) this.value = 328000;
+      calculer();
+    });
+  </script>
+
+</body>
+</html>
