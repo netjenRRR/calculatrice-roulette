@@ -227,15 +227,18 @@
       display: flex;
       margin-top: 6px;
       margin-bottom: 2px;
-      border-radius: 12px;
-      overflow: hidden;
     }
 
     .resultat-principal {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
       background-color: #1a4a2e;
       padding: 8px 12px;
       text-align: center;
       flex: 1;
+      border-radius: 12px 0 0 12px;
     }
 
     .resultat-label {
@@ -249,16 +252,19 @@
       font-size: 2.2rem;
       font-weight: bold;
       line-height: 1;
+      margin-top: 3px;
     }
 
     .resultat-reste {
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-start;
+      align-items: center;
       background-color: #0f2e1a;
       padding: 8px 12px;
       text-align: center;
       flex: 1;
+      border-radius: 0 12px 12px 0;
     }
 
     .reste-label {
@@ -267,11 +273,24 @@
       margin-bottom: 2px;
     }
 
-    .reste-valeur {
+    input.reste-valeur {
       color: #f0c040;
       font-size: 2.2rem;
       font-weight: bold;
       line-height: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      width: 100%;
+      padding: 0;
+      margin: 0;
+      text-align: center;
+      -moz-appearance: textfield;
+    }
+
+    input.reste-valeur::-webkit-inner-spin-button,
+    input.reste-valeur::-webkit-outer-spin-button {
+      -webkit-appearance: none;
     }
   </style>
 </head>
@@ -313,7 +332,7 @@
       </div>
       <div class="resultat-reste" id="bloc-reste">
         <div class="reste-label">Reste à payer</div>
-        <div class="reste-valeur" id="reste">—</div>
+        <input type="number" class="reste-valeur" id="reste" placeholder="—" />
       </div>
     </div>
 
@@ -390,6 +409,7 @@
     const valeursJeton = [5, 10, 20, 25, 50, 100];
     let indexJeton = 0;
     let paiementCroupier = 0;
+    let totalJetons = 0;
 
     const mises = [
       { id: "plein",        ratio: 35, max: 20  },
@@ -430,7 +450,7 @@
     }
 
     function calculer() {
-      let totalJetons = 0;
+      totalJetons = 0;
 
       mises.forEach(function(mise) {
         const valeur = parseInt(document.getElementById(mise.id).value) || 0;
@@ -447,9 +467,9 @@
         const valeurJeton = valeursJeton[indexJeton];
         const jetonsPaies = Math.floor(paiementCroupier / valeurJeton);
         const resteJetons = totalJetons - jetonsPaies;
-        document.getElementById("reste").textContent = resteJetons;
+        document.getElementById("reste").value = resteJetons;
       } else {
-        document.getElementById("reste").textContent = "—";
+        document.getElementById("reste").value = "";
       }
     }
 
@@ -477,6 +497,20 @@
       const val = parseInt(this.value) || 0;
       if (val > 328000) this.value = 328000;
       calculer();
+    });
+
+    document.getElementById("reste").addEventListener("input", function() {
+      const resteVal = parseInt(this.value);
+      if (isNaN(resteVal)) {
+        paiementCroupier = 0;
+        document.getElementById("input-croupier").value = "";
+        return;
+      }
+      const valeurJeton = valeursJeton[indexJeton];
+      const jetonsPaies = totalJetons - resteVal;
+      const paiement = Math.max(0, jetonsPaies * valeurJeton);
+      paiementCroupier = paiement;
+      document.getElementById("input-croupier").value = paiement > 0 ? paiement : "";
     });
   </script>
 
