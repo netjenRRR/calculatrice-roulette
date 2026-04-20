@@ -413,10 +413,10 @@
 
     const mises = [
       { id: "plein",        ratio: 35, max: 20  },
-      { id: "cheval",       ratio: 17, max: 40  },
+      { id: "cheval",       ratio: 17, max: 160  },
       { id: "transversale", ratio: 11, max: 60  },
-      { id: "carre",        ratio: 8,  max: 80  },
-      { id: "sixain",       ratio: 5,  max: 120 },
+      { id: "carre",        ratio: 8,  max: 320  },
+      { id: "sixain",       ratio: 5,  max: 240 },
     ];
 
     function changerJeton(direction) {
@@ -495,7 +495,7 @@
 
     document.getElementById("input-croupier").addEventListener("input", function() {
       const val = parseInt(this.value) || 0;
-      if (val > 328000) this.value = 328000;
+      if (val > 784000) this.value = 784000;
       calculer();
     });
 
