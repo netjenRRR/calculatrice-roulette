@@ -314,7 +314,7 @@
     <div class="selecteur-bloc">
       <div style="display: flex; flex-direction: column; gap: 4px; flex: 1;">
         <div class="selecteur-label">Paiement euros</div>
-        <input type="number" id="input-croupier" min="0" value="" placeholder="0" style="width: 100%;" />
+        <input type="number" inputmode="numeric" id="input-croupier" min="0" value="" placeholder="0" style="width: 100%;" />
       </div>
       <div style="display: grid; grid-template-columns: 56px 56px; grid-auto-rows: 38px; gap: 4px; flex: 0 0 116px;">
         <button class="btn-sel btn-stack" onclick="changerCroupier(-20)" style="width: 100%; height: 100%;">−Stack</button>
@@ -332,7 +332,7 @@
       </div>
       <div class="resultat-reste" id="bloc-reste">
         <div class="reste-label">Reste à payer</div>
-        <input type="number" class="reste-valeur" id="reste" placeholder="—" />
+        <input type="number" inputmode="numeric" class="reste-valeur" id="reste" placeholder="—" />
       </div>
     </div>
 
@@ -348,7 +348,7 @@
       </div>
       <div class="controles">
         <button class="btn-inc" onclick="decrementer('plein')">−</button>
-        <input type="number" id="plein" min="0" value="0" />
+        <input type="number" inputmode="numeric" id="plein" min="0" value="0" />
         <button class="btn-inc" onclick="incrementer('plein')">+</button>
       </div>
     </div>
@@ -360,7 +360,7 @@
       </div>
       <div class="controles">
         <button class="btn-inc" onclick="decrementer('cheval')">−</button>
-        <input type="number" id="cheval" min="0" value="0" />
+        <input type="number" inputmode="numeric" id="cheval" min="0" value="0" />
         <button class="btn-inc" onclick="incrementer('cheval')">+</button>
       </div>
     </div>
@@ -372,7 +372,7 @@
       </div>
       <div class="controles">
         <button class="btn-inc" onclick="decrementer('transversale')">−</button>
-        <input type="number" id="transversale" min="0" value="0" />
+        <input type="number" inputmode="numeric" id="transversale" min="0" value="0" />
         <button class="btn-inc" onclick="incrementer('transversale')">+</button>
       </div>
     </div>
@@ -384,7 +384,7 @@
       </div>
       <div class="controles">
         <button class="btn-inc" onclick="decrementer('carre')">−</button>
-        <input type="number" id="carre" min="0" value="0" />
+        <input type="number" inputmode="numeric" id="carre" min="0" value="0" />
         <button class="btn-inc" onclick="incrementer('carre')">+</button>
       </div>
     </div>
@@ -396,7 +396,7 @@
       </div>
       <div class="controles">
         <button class="btn-inc" onclick="decrementer('sixain')">−</button>
-        <input type="number" id="sixain" min="0" value="0" />
+        <input type="number" inputmode="numeric" id="sixain" min="0" value="0" />
         <button class="btn-inc" onclick="incrementer('sixain')">+</button>
       </div>
     </div>
